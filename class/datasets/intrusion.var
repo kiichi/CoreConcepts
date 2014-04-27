@@ -1,0 +1,12 @@
+protocol-type_tcp
+protocol-type_icmp
+protocol-type_udp
+src-bytes
+same-host
+same-service
+serror-rate
+rerror-rate
+apache
+norm
+saint
+smurf
