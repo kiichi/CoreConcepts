@@ -1,5 +1,5 @@
 #Example Images
 
-visualization1.png
+!visualization1.png
 
-visualization2.png
+!visualization2.png
