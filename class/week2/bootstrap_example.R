@@ -2,10 +2,10 @@ library(datasets)
 #print(colnames(iris))
 
 #all 
-sepal_l<-iris[,'Sepal.Length']
+#sepal_l<-iris[,'Sepal.Length']
 
 #Species: setosa,versicolor,virginica
-#sepal_l<-iris[iris[,'Species'] == 'setosa','Sepal.Length']
+sepal_l<-iris[iris[,'Species'] == 'setosa','Sepal.Length']
 #sepal_l<-iris[iris[,'Species'] == 'versicolor','Sepal.Length']
 #sepal_l<-iris[iris[,'Species'] == 'virginica','Sepal.Length']
 
@@ -28,5 +28,8 @@ print(qt_pts)
 
 # 2.5%    97.5% 
 # 5.715333 5.974000 
+
+
+#see quantile.png in the same folder
 
 
