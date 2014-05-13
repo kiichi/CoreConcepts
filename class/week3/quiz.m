@@ -2,6 +2,9 @@ p = polyfit(x2,y2,1)
 % a is   1.5000 b is   3.2000
 % y = a * x + b
 
+cof=p(1) * std(x) / std(y)
+cof^2 %shortcut to calc this
+
 yfit = polyval(p,x2);
 yresid = y2 - yfit;
 SSresid = sum(yresid.^2);

@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>linear_regression_calc</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-05-12"><meta name="DC.source" content="linear_regression_calc.m"><style type="text/css">
+      --><title>linear_regression_calc</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-05-13"><meta name="DC.source" content="linear_regression_calc.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -66,11 +66,26 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><pre class="codeinput"><span class="comment">%http://www.mathworks.com/help/matlab/data_analysis/linear-regression.html</span>
-
-<span class="comment">%calculate the coefficient of determination, r-square</span>
-
+  </style></head><body><div class="content"><pre class="codeinput"><span class="comment">%</span>
+<span class="comment">% See Core Data Analysis Week 3 video.</span>
+<span class="comment">% 3.3 Correlation and determinacy coefficients: properties and meaning</span>
+<span class="comment">% see equations.png and equations2.png!</span>
+<span class="comment">%</span>
+<span class="comment">% the second part is from the exable below.</span>
+<span class="comment">% http://www.mathworks.com/help/matlab/data_analysis/linear-regression.html</span>
+<span class="comment">%</span>
+<span class="comment">% calculate the coefficient of determination, r-square</span>
+<span class="comment">%</span>
+<span class="comment">% y = a * x + b</span>
+<span class="comment">% a is the slope</span>
+<span class="comment">%</span>
+<span class="comment">% r = a * std(x) / std(y)</span>
+<span class="comment">% r^2</span>
+<span class="comment">%</span>
+<span class="comment">% or</span>
+<span class="comment">%</span>
 <span class="comment">% rsq = 1 - SSresid / SStotal</span>
+<span class="comment">% (see part 2 below)</span>
 
 y=[20,32,28,44,76,65,97,121,140,160]
 x=1:length(y)
@@ -83,9 +98,21 @@ p = polyfit(x,y,1)
 <span class="comment">%a is 15.9333 and b is -9.3333</span>
 <span class="comment">%y = 15.9333 * x + -9.3333</span>
 
-<span class="comment">%Call polyval to use p to predict y, calling the result yfit:</span>
+<span class="comment">%-------- Shortcut for getting rho (part 1) ----------</span>
+cof=p(1) * std(x) / std(y)
 
+<span class="comment">%rho sqare = determinicy cof</span>
+<span class="comment">% this should be matching rsq at the end!!!</span>
+cof^2
+<span class="comment">%--------------------------------------------</span>
+
+<span class="comment">%-------- Another way to calculate using polyval via fitting line (part 2) ----------</span>
+<span class="comment">%Call polyval to use p to predict y, calling the result yfit:</span>
+<span class="comment">% the polyval below does calculate</span>
+<span class="comment">% yfit =  p(1) * x + p(2);</span>
+<span class="comment">% yfit = a * x + b</span>
 yfit = polyval(p,x);
+
 
 <span class="comment">%Compute the residual values as a vector signed numbers:</span>
 
@@ -123,17 +150,42 @@ p =
    15.9333   -9.3333
 
 
+cof =
+
+    0.9738
+
+
+ans =
+
+    0.9483
+
+
 rsq =
 
     0.9483
 
 </pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
-%http://www.mathworks.com/help/matlab/data_analysis/linear-regression.html
-
-%calculate the coefficient of determination, r-square
-
+%
+% See Core Data Analysis Week 3 video.
+% 3.3 Correlation and determinacy coefficients: properties and meaning 
+% see equations.png and equations2.png!
+%
+% the second part is from the exable below.
+% http://www.mathworks.com/help/matlab/data_analysis/linear-regression.html
+%
+% calculate the coefficient of determination, r-square
+%
+% y = a * x + b
+% a is the slope
+%
+% r = a * std(x) / std(y)
+% r^2
+%
+% or 
+%
 % rsq = 1 - SSresid / SStotal
+% (see part 2 below)
 
 y=[20,32,28,44,76,65,97,121,140,160]
 x=1:length(y)
@@ -146,9 +198,21 @@ p = polyfit(x,y,1)
 %a is 15.9333 and b is -9.3333
 %y = 15.9333 * x + -9.3333
 
-%Call polyval to use p to predict y, calling the result yfit:
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH Shortcut for getting rho (part 1) REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+cof=p(1) * std(x) / std(y)
 
+%rho sqare = determinicy cof 
+% this should be matching rsq at the end!!!
+cof^2
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH Another way to calculate using polyval via fitting line (part 2) REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+%Call polyval to use p to predict y, calling the result yfit:
+% the polyval below does calculate
+% yfit =  p(1) * x + p(2);
+% yfit = a * x + b
 yfit = polyval(p,x);
+
 
 %Compute the residual values as a vector signed numbers:
 
