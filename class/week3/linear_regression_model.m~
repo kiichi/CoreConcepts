@@ -1,6 +1,0 @@
-y=[20,32,28,44,76,65,97,121,140]
-x=1:length(y)
-%it seems you need to install "Satistics Toolbox" wait wait
-%mdl = fitlm(x,y)
-
-
