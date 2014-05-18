@@ -5,13 +5,25 @@
 % hist_sepal_length.png
 hist(iris.SL,30);
 
+% I'll break up the population into 4 groups 
+% based on how it looks like in the histogram.
 % see boundly.png
 boundly=[4 5.3 5.9 7 8];
+% Groups:
+%   - G1: 4 - 5.3
+%   - G2: 5.3 = 5.9
+%   - G3: 5.9 - 7
+%   - G4: 7 - 8
+
+% Now, let's also group & count by taxon. Without Sepal Length
+% The total count per taxon goes like this...
 % t1c=length(find(strncmp(iris.Taxon,'I.setosa',length('I.setosa'))))
 
 % Taxon T1 - T3
-%tx = ['I.setosa' 'I.versicolor' 'I.virginica']
 tx={'I.setosa','I.versicolor','I.virginica'};
+
+% Now, let's count how many values 
+% in the each boundly-group (G) per Taxon(T)
 
 % G1, G2, G3 and G4
 for m=1:4;    
@@ -22,12 +34,12 @@ for m=1:4;
         % The strcmp below returns 1 or 0
         % so the sum of matching taxon is the count of the cell.
         cnt=sum(strncmp(iris.Taxon(found_idx),tx{n},length(tx{n})));
-        nl(n,m)=cnt;        
+        ct(n,m)=cnt;        
     end;
 end;
-disp(nl);
+disp(ct);
 
-% Finally, you got that table.
+% Finally, you got that contingency table.
 % see table.png for another exaple when each taxon count is 50
 
 %     39    11     0     0
@@ -38,34 +50,84 @@ disp(nl);
 %-------------------------------------------
 % Verify the result
 
-sum(nl,1)
+% Calculate total by group. Goes bottom row
+total_g = sum(ct,1)
 % 42    31    66    11
 
-sum(nl,2)
+% Calculate total by taxon. Goes right col
+total_t = sum(ct,2)
 %     50
 %     49
 %     51
 
-sum(sum(nl))
+sum(sum(ct))
 %   150
 
 %----------------------------------------------
 % Relative Contingency (Co-Occurrance) Table
 % relative_contingency_table.png
-rc = nl/150;
+rc = ct/150;
 %     0.2600    0.0733         0         0
 %     0.0200    0.1133    0.1867    0.0067
 %          0    0.0200    0.2533    0.0667
 
 % marginals...
 
-sum(nl,1)/150
+sum(ct,1)/150
 %    0.2800    0.2067    0.4400    0.0733
 
-sum(nl,2)/150
+sum(ct,2)/150
 %     0.3333
 %     0.3267
 %     0.3400
+
+
+%-------------------------------------------
+% Conditional Probability
+% see conditional_probability.png
+cp=bsxfun(@rdivide, ct,total_g);
+
+% counts
+%     39    11     0     0
+%      3    17    28     1
+%      0     3    38    10
+
+% divide by the total 
+%     42    31    66    11
+
+% p(T|G) ... "Conditional Probability" 
+% Probability T over G
+%           G1        G2        G3        G4
+%T1     0.9286    0.3548         0         0
+%T2     0.0714    0.5484    0.4242    0.0909
+%T3          0    0.0968    0.5758    0.9091
+
+%-----------------------------------------------------------------------------
+% This table indicates "Guess" from one value.
+% For example, if you got a value between 4 and 5.3 cm (Group 1) 
+% (see boundly)
+% 92.86% of chance, it's Taxon1! (See cell 1,1)
+
+
+%-----------------------------------------------------------------------------
+% However, the problem is, some values are indicative.
+% That means, if each taxon count changes, the probability
+% does not really represent anymore... 
+
+
+% Assume H is Group of Sepal "Width"
+% Let's think about the relations between Length and Width
+% instead of Taxon and Length.
+% Therefore, you take p(H|G) instead of p(T|G).
+% This will not work, and it's called 
+% "lack of correlation"
+
+
+
+
+
+
+
 
 
 
