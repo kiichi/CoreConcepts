@@ -2,7 +2,11 @@
 % Part 1: Contingency Table and Conditional Probability
 %=========================================================================
 
+% Note: semi-colon at the end of line means suppress console out
+
 %Import iris.mat - random generated iris
+% There are 150 total items.
+total = length(iris.SL);
 
 % Build contengency table
 
@@ -70,17 +74,17 @@ sum(sum(ct))
 %----------------------------------------------
 % Relative Contingency (Co-Occurrance) Table
 % relative_contingency_table.png
-rc = ct/150;
+rc = ct/total;
 %     0.2600    0.0733         0         0
 %     0.0200    0.1133    0.1867    0.0067
 %          0    0.0200    0.2533    0.0667
 
 % marginals...
 
-sum(ct,1)/150
+sum(ct,1)/total
 %    0.2800    0.2067    0.4400    0.0733
 
-sum(ct,2)/150
+sum(ct,2)/total
 %     0.3333
 %     0.3267
 %     0.3400
@@ -114,7 +118,7 @@ cp=bsxfun(@rdivide, ct,total_g);
 % 92.86% of chance, it's Taxon1! (See cell 1,1)
 
 %=========================================================================
-% Part 2: Quetelet Index
+% Part 2: Quetelet Index, Relative Freq, Independence and Chi-Square Test
 %=========================================================================
 
 %-------------------------------------------------------------------------
@@ -190,11 +194,11 @@ cp2=bsxfun(@rdivide, ct2,total_g);
 %     0.3810    0.3226         0    0.1818
 
 % margin bottom p(G)
-pg = total_g / 150;
+pg = total_g / total;
 %    0.2800    0.2067    0.4400    0.0733
 
 % margin right p(H)
-ph = total_h / 150;
+ph = total_h / total;
 %     0.0533
 %     0.2533
 %     0.5067
@@ -215,11 +219,148 @@ qhg = bsxfun(@rdivide,bsxfun(@minus, cp2,ph),ph);
 
 % see quetelet_index_summary.png
     
-php*100
+qhg*100
 %    33.9286   20.9677  -14.7727 -100.0000
 %   -90.6015   52.8014   31.5789    7.6555
 %     3.3835  -55.4329   22.6077    7.6555
 %   104.0816   72.8111 -100.0000   -2.5974
+
+
+
+%-------------------------------------------
+% C) Independence Test
+%
+%  Observed Relative Frequency
+%  v.s.
+%  Frequency Expected Under Independence
+%
+%-------------------------------------------
+
+% Contingency Relative Frequency Table A.K.A Observed Frequency
+% (Total=1)
+% Use ct2 H|G from above
+% for H and G (Length and Width)
+% contingency_relative_freq.png
+fobs=ct2/total;
+%     0.0149    0.0110    0.0235    0.0039
+%     0.0709    0.0524    0.1115    0.0186
+%     0.1419    0.1047    0.2229    0.0372
+%     0.0523    0.0386    0.0821    0.0137
+    
+sum(sum(fobs))
+% should be 1
+
+% p(H) - marginal right col
+ph=sum(ct2,2)/total;
+%     0.0533
+%     0.2533
+%     0.5067
+%     0.1867
+
+% p(G) - marginal bottom row
+pg=sum(ct2,1)/total;
+%    0.2800    0.2067    0.4400    0.0733
+
+% frequency expected under independence
+% Let's check p(H) * p(G) - this is also total is 1
+fexp=ph*pg;
+%     0.0149    0.0110    0.0235    0.0039
+%     0.0709    0.0524    0.1115    0.0186
+%     0.1419    0.1047    0.2229    0.0372
+%     0.0523    0.0386    0.0821    0.0137
+
+% Now, observed frequency (crft) and frequency under independence (feui)
+% differences are:
+
+df=fexp-fobs;
+
+%    -0.0051   -0.0023    0.0035    0.0039
+%     0.0643   -0.0276   -0.0352   -0.0014
+%    -0.0048    0.0580   -0.0504   -0.0028
+%    -0.0544   -0.0281    0.0821    0.0004
+
+% Which cell has differences more than 0.04 ???
+over004=abs(df)>0.04
+%      0     0     0     0
+%      1     0     0     0
+%      0     1     1     0
+%      1     0     1     0
+
+% Looks like only 5 of them got strong correlation.
+% Other 11 of them are weakly correlated! not that good.
+
+% see observed_vs_expected.png
+
+
+%-------------------------------------------
+% D) Chi-Square Test
+%
+% Let O=Observed, E=Expected
+%
+% Chi^2=sum((O-E)^2/E)
+%
+% Hypothesis: Features are independeint in the population
+% Then: Density Function (f) of random var NX^2 (=chi^2)
+%       with (K-1)(L-1) degree of freedom.
+%
+% Note: N is number of items (e.g. 150)
+%-------------------------------------------
+%
+% Summary:
+%   If the hypothetical chi-square distibution is 95% matching 
+%   with observed dataset, you can almost say "they are same"
+%
+%   - "Hyposis of independence is True" :  5%
+%   - "Hyposis of independence is False": 95%
+%
+% In our case we have 4 x 4 matrix.
+% Let K=4, L=4.
+%
+% f(K,L) = (K-1)*(L-1)
+% f(K,L) = 3 * 3
+% f(K,L) = 9
+%
+% with f=9, there is 5% of change NX^2 could be greater than 16.92
+%
+% If N=150, NX^2 is 28.93 which is greater than 16.92.
+%   -> The Independence is rejected.
+%
+% If N=50, NX^2 is 9.64 which is less than 16.92.
+%   -> The Independence could not rejected
+%
+% see chisq.png
+% 
+% From Above Calculations, 
+%   Freq. Observed : fobs
+%   Freq. Expected : fexp
+
+% Check Chi-Square == Summary Quetelet ???
+
+%---------------------------------------------
+% Chi Square from Observed & Expected Relative Frequency
+df=fobs-fexp;
+chi=(df.*df)./fexp;
+chisq=sum(sum(chi));
+% 0.2938
+
+%---------------------------------------------
+% Summary Quetelet qs
+q=fobs./fexp-1;
+qq=fobs.*q;
+qs=sum(sum(qq))
+% 0.2938
+
+
+% Notice, Chi-Square (X^2) == Summary Quetelet (Q)
+% Means, Q=X^2 is the average relative increase in occurrance H and G
+% see chisq2.png. 
+
+% P = min(K,L)-1
+
+
+% continues...
+
+
 
 
 
