@@ -321,6 +321,9 @@ over004=abs(df)>0.04
 % f(K,L) = 9
 %
 % with f=9, there is 5% of change NX^2 could be greater than 16.92
+% (See Chi-Sq table 
+%  http://sites.stat.psu.edu/~mga/401/tables/Chi-square-table.pdf or
+%  see chi-sq-table.png / chi-sq-table2.png
 %
 % If N=150, NX^2 is 28.93 which is greater than 16.92.
 %   -> The Independence is rejected.
@@ -350,6 +353,8 @@ qq=fobs.*q;
 qs=sum(sum(qq))
 % 0.2938
 
+
+%pearson_index=sqrt(chi)
 
 % Notice, Chi-Square (X^2) == Summary Quetelet (Q)
 % Means, Q=X^2 is the average relative increase in occurrance H and G
