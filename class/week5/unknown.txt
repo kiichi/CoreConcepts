@@ -1,0 +1,2 @@
+drink	equal	fuel	play	popular	price	relief	talent	tax	woman
+0	1	2	2	1	0	2	0	2	0
