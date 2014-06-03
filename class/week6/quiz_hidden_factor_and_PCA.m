@@ -1,3 +1,4 @@
+%test=load('../datasets/Iris.dat')
 X=table2array(iris(:,1:4))
 
 %SVD
